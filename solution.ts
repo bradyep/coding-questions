@@ -31,14 +31,13 @@ switch (solution) {
         console.log(`solution ${solution} not found`);
 }
 
-// console.log(getParamValueFor('test'));
-
 function getParamValueFor(paramName: string): number | string {
     const paramNameIndex = args.indexOf('--' + paramName)
     if (paramNameIndex < 0) { 
-        console.log(`Can't find parameter name: ${paramName}`) ;
+        console.log(`Can't find parameter name: ${paramName}`);
     } else {
-        if (args.length <= paramNameIndex) { 
+        console.log(`Found ${paramName} | args.length: ${args.length} | paramNameIndex: ${paramNameIndex}`);
+        if (args.length - 1 <= paramNameIndex) { 
             console.log(`Found param name at ${paramNameIndex} but size of array is ${args.length}, which is too small, so can't get value`);
         } else {
             const paramValue = args[paramNameIndex + 1];
