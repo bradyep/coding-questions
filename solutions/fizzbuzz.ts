@@ -1,9 +1,9 @@
 export class Fizzbuzz {
-    constructor(private countTo: number) {
+  constructor(private countTo: number) {
 
-    }
+  }
 
-    solve() {
-        console.log(`Solving while counting to ${this.countTo}`);
-    }
+  solve() {
+    console.log(`Solving while counting to ${this.countTo}`);
+  }
 }

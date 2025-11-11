@@ -1,67 +1,65 @@
 import { Fizzbuzz } from "./solutions/fizzbuzz.js";
 
 export class Solution {
-    constructor(private processArgs: string[]) {
-        const nodeParamsToOmit = 2;
-        this.args = processArgs.slice(nodeParamsToOmit); // remove node and script paths
+  constructor(private processArgs: string[]) {
+    const nodeParamsToOmit = 2;
+    this.args = processArgs.slice(nodeParamsToOmit); // remove node and script paths
+  }
+
+  private args: string[];
+
+  run() {
+    if (this.args.length < 1) {
+      console.log('Must supply a solution to run');
+      process.exit(0);
     }
 
-    private args: string[];
+    this.args.forEach((arg, index) => {
+      console.log(`Argument ${index + 1}: ${arg}`)
+    });
 
-    run() {
-        if (this.args.length < 1) {
-            console.log('Must supply a solution to run');
-            process.exit(0);
-        }
+    const solution: string = this.args[0] ?? '';
 
-        this.args.forEach((arg, index) => {
-            console.log(`Argument ${index + 1}: ${arg}`)
-        });
-
-        const solution: string = this.args[0] ?? '';
-
-        switch (solution) {
-            case "fizzbuzz":
-                console.log("loading fizzbuzz solution");
-                const countToParamValue = this.getParamValueFor('count-to');
-                if (countToParamValue) {
-                    const fizzbuzz = new Fizzbuzz(+countToParamValue);
-                    fizzbuzz.solve();
-                } else { console.log(`Couldn't get parameters needed for ${solution}`) }
-                break;
-            case "fibonacci":
-                console.log("loading fibonacci solution");
-                break;
-            case "anagram":
-                console.log("loading anagram solution");
-                break;
-            default:
-                console.log(`solution ${solution} not found`);
-        }
+    switch (solution) {
+      case "fizzbuzz":
+        console.log("loading fizzbuzz solution");
+        const countToParamValue = this.getParamValueFor('count-to');
+        if (countToParamValue) {
+          const fizzbuzz = new Fizzbuzz(+countToParamValue);
+          fizzbuzz.solve();
+        } else { console.log(`Couldn't get parameters needed for ${solution}`) }
+        break;
+      case "fibonacci":
+        console.log("loading fibonacci solution");
+        break;
+      case "anagram":
+        console.log("loading anagram solution");
+        break;
+      default:
+        console.log(`solution ${solution} not found`);
     }
+  }
 
-    getParamValueFor(paramName: string): number | string | undefined {
-        const paramNameIndex = this.args.indexOf('--' + paramName)
-        if (paramNameIndex < 0) {
-            console.log(`Can't find parameter name: ${paramName}`);
+  getParamValueFor(paramName: string): number | string | undefined {
+    const paramNameIndex = this.args.indexOf('--' + paramName)
+    if (paramNameIndex < 0) {
+      console.log(`Can't find parameter name: ${paramName}`);
+    } else {
+      console.log(`Found ${paramName} | args.length: ${this.args.length} | paramNameIndex: ${paramNameIndex}`);
+      if (this.args.length - 1 <= paramNameIndex) {
+        console.log(`Found param name at ${paramNameIndex} but size of array is ${this.args.length}, which is too small, so can't get value`);
+      } else {
+        const paramValue = this.args[paramNameIndex + 1];
+        if (paramValue) {
+
+          return paramValue;
         } else {
-            console.log(`Found ${paramName} | args.length: ${this.args.length} | paramNameIndex: ${paramNameIndex}`);
-            if (this.args.length - 1 <= paramNameIndex) {
-                console.log(`Found param name at ${paramNameIndex} but size of array is ${this.args.length}, which is too small, so can't get value`);
-            } else {
-                const paramValue = this.args[paramNameIndex + 1];
-                if (paramValue) {
-                    return paramValue;
-                } else {
-                    console.log(`Param value at position ${paramNameIndex + 1} is undefined`)
-                }
-            }
+          console.log(`Param value at position ${paramNameIndex + 1} is undefined`)
         }
-
-        return 0;
+      }
     }
+
+    return undefined;
+  }
 
 }
-
-const solution = new Solution(process.argv);
-solution.run();
