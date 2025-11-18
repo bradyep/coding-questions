@@ -1,5 +1,6 @@
-import { Solution } from "./solution.js";
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { Solution } from "./solution.js";
+import { Fizzbuzz } from "./solutions/fizzbuzz.js";
 
 describe('constructor', () => {
   it('removes the first two parameters (note and script paths) from arguments', () => {
@@ -20,6 +21,7 @@ describe('run', () => {
 
   afterEach(() => {
     mockExit.mockRestore();
+    jest.restoreAllMocks();
   });
 
   it(`gracefully exits out if there aren't any parameters`, () => {
@@ -28,13 +30,41 @@ describe('run', () => {
     expect(() => solution.run()).toThrow('process.exit: 0');
     expect(mockExit).toHaveBeenCalledTimes(1);
     expect(mockExit).toHaveBeenCalledWith(0);
-  })
+  });
 
   it(`continues to run if there is at least one parameter`, () => {
     const solution = new Solution([]);
     (solution as any).args = ['fizzbuzz'];
     solution.run();
     expect(mockExit).toHaveBeenCalledTimes(0);
+  });
+
+  it('instantiates a fizzbuzz object and calls solve on it if it is specified in the parameters with a valid count-to', () => {
+    const mockSolve = jest.fn();
+    const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'solve').mockImplementation(mockSolve);
+    
+    const solution = new Solution([]);
+    (solution as any).args = ['fizzbuzz', '--count-to', '50'];
+    solution.run();
+    
+    expect(fizzbuzzSpy).toHaveBeenCalledTimes(1);
+    expect(mockSolve).toHaveBeenCalledTimes(1);
+    
+    fizzbuzzSpy.mockRestore();
+  })
+
+  it('does not call solve if the parameters are not valid', () => {
+    const mockSolve = jest.fn();
+    const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'solve').mockImplementation(mockSolve);
+    
+    const solution = new Solution([]);
+    (solution as any).args = ['fizzbuzz', '--random-param', '50'];
+    solution.run();
+    
+    expect(fizzbuzzSpy).toHaveBeenCalledTimes(0);
+    expect(mockSolve).toHaveBeenCalledTimes(0);
+    
+    fizzbuzzSpy.mockRestore();
   })
 })
 
