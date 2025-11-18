@@ -11,7 +11,7 @@ describe('constructor', () => {
 
 describe('run', () => {
   let mockExit: jest.Mocked<typeof process.exit>;
-  
+
   beforeEach(() => {
     mockExit = jest.spyOn(process, 'exit').mockImplementation((code?: string | number | null | undefined) => {
       throw new Error(`process.exit: ${code || 0}`);
@@ -36,4 +36,21 @@ describe('run', () => {
     solution.run();
     expect(mockExit).toHaveBeenCalledTimes(0);
   })
+})
+
+describe('getParamValueForName', () => {
+  it('returns undefined if it cannot find the parameter name', () => {
+    expect(Solution.getParamValueForName('weird-param-name', ['fizzbuzz', '--count-to', '50'])).toBeUndefined();
+  });
+
+  it('returns undefined if it cannot find the parameter name because it is missing the double dash syntax', () => {
+    expect(Solution.getParamValueForName('count-to', ['fizzbuzz', 'count-to', '50'])).toBeUndefined();
+  });
+
+  it('returns undefined the supplied parameter name is the last parameter (nothing after it)', () => {
+    expect(Solution.getParamValueForName('count-to', ['fizzbuzz', '--count-to'])).toBeUndefined();
+  });
+  it('returns the value of the argument that comes after the supplied parameter name when that parameter name is found', () => {
+    expect(Solution.getParamValueForName('count-to', ['fizzbuzz', '--count-to', '50'])).toBe('50');
+  });
 })

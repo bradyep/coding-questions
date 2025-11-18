@@ -23,7 +23,7 @@ export class Solution {
     switch (solution) {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
-        const countToParamValue = this.getParamValueFor('count-to');
+        const countToParamValue = Solution.getParamValueForName('count-to', this.args);
         if (countToParamValue) {
           const fizzbuzz = new Fizzbuzz(+countToParamValue);
           fizzbuzz.solve();
@@ -40,16 +40,16 @@ export class Solution {
     }
   }
 
-  getParamValueFor(paramName: string): number | string | undefined {
-    const paramNameIndex = this.args.indexOf('--' + paramName)
+  static getParamValueForName(paramName: string, parameters: string[]): string | undefined {
+    const paramNameIndex = parameters.indexOf('--' + paramName)
     if (paramNameIndex < 0) {
       console.log(`Can't find parameter name: ${paramName}`);
     } else {
-      console.log(`Found ${paramName} | args.length: ${this.args.length} | paramNameIndex: ${paramNameIndex}`);
-      if (this.args.length - 1 <= paramNameIndex) {
-        console.log(`Found param name at ${paramNameIndex} but size of array is ${this.args.length}, which is too small, so can't get value`);
+      console.log(`Found ${paramName} | args.length: ${parameters.length} | paramNameIndex: ${paramNameIndex}`);
+      if (parameters.length - 1 <= paramNameIndex) {
+        console.log(`Found param name at ${paramNameIndex} but size of array is ${parameters.length}, which is too small, so can't get value`);
       } else {
-        const paramValue = this.args[paramNameIndex + 1];
+        const paramValue = parameters[paramNameIndex + 1];
         if (paramValue) {
 
           return paramValue;
