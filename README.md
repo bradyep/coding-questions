@@ -4,4 +4,4 @@ Repo for practicing coding questions
 
 ## How to Run
 
-`npx tsx solution.ts fizzbuzz --count-to 27`
+`npx tsx run fizzbuzz --count-to 27`
