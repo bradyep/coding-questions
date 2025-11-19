@@ -1,4 +1,4 @@
-import { Solution } from "./solution.js";
+import { Loader } from "./Loader.js";
 
-const solution = new Solution(process.argv);
-solution.run();
+const loader = new Loader(process.argv);
+loader.run();

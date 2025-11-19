@@ -1,10 +1,10 @@
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { Solution } from "./solution.js";
+import { Loader } from "./Loader.js";
 import { Fizzbuzz } from "./solutions/fizzbuzz.js";
 
 describe('constructor', () => {
   it('removes the first two parameters (note and script paths) from arguments', () => {
-    const solution = new Solution(['1', '2', '3']);
+    const solution = new Loader(['1', '2', '3']);
 
     expect((solution as any).args).toStrictEqual(['3']);
   });
@@ -25,7 +25,7 @@ describe('run', () => {
   });
 
   it(`gracefully exits out if there aren't any parameters`, () => {
-    const solution = new Solution([]);
+    const solution = new Loader([]);
     (solution as any).args = [];
     expect(() => solution.run()).toThrow('process.exit: 0');
     expect(mockExit).toHaveBeenCalledTimes(1);
@@ -33,36 +33,36 @@ describe('run', () => {
   });
 
   it(`continues to run if there is at least one parameter`, () => {
-    const solution = new Solution([]);
+    const solution = new Loader([]);
     (solution as any).args = ['fizzbuzz'];
     solution.run();
     expect(mockExit).toHaveBeenCalledTimes(0);
   });
 
-  it('instantiates a fizzbuzz object and calls solve on it if it is specified in the parameters with a valid count-to', () => {
-    const mockSolve = jest.fn();
-    const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'solve').mockImplementation(mockSolve);
+  it('instantiates a fizzbuzz object and calls initial() on it if it is specified in the parameters with a valid count-to', () => {
+    const mockInitial = jest.fn();
+    const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'initial').mockImplementation(mockInitial);
     
-    const solution = new Solution([]);
+    const solution = new Loader([]);
     (solution as any).args = ['fizzbuzz', '--count-to', '50'];
     solution.run();
     
     expect(fizzbuzzSpy).toHaveBeenCalledTimes(1);
-    expect(mockSolve).toHaveBeenCalledTimes(1);
+    expect(mockInitial).toHaveBeenCalledTimes(1);
     
     fizzbuzzSpy.mockRestore();
   })
 
-  it('does not call solve if the parameters are not valid', () => {
-    const mockSolve = jest.fn();
-    const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'solve').mockImplementation(mockSolve);
+  it('does not create a new instance of Fizzbuzz or call initial() if the parameters are not valid', () => {
+    const mockInitial = jest.fn();
+    const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'initial').mockImplementation(mockInitial);
     
-    const solution = new Solution([]);
+    const solution = new Loader([]);
     (solution as any).args = ['fizzbuzz', '--random-param', '50'];
     solution.run();
     
     expect(fizzbuzzSpy).toHaveBeenCalledTimes(0);
-    expect(mockSolve).toHaveBeenCalledTimes(0);
+    expect(mockInitial).toHaveBeenCalledTimes(0);
     
     fizzbuzzSpy.mockRestore();
   })
@@ -70,17 +70,17 @@ describe('run', () => {
 
 describe('getParamValueForName', () => {
   it('returns undefined if it cannot find the parameter name', () => {
-    expect(Solution.getParamValueForName('weird-param-name', ['fizzbuzz', '--count-to', '50'])).toBeUndefined();
+    expect(Loader.getParamValueForName('weird-param-name', ['fizzbuzz', '--count-to', '50'])).toBeUndefined();
   });
 
   it('returns undefined if it cannot find the parameter name because it is missing the double dash syntax', () => {
-    expect(Solution.getParamValueForName('count-to', ['fizzbuzz', 'count-to', '50'])).toBeUndefined();
+    expect(Loader.getParamValueForName('count-to', ['fizzbuzz', 'count-to', '50'])).toBeUndefined();
   });
 
   it('returns undefined the supplied parameter name is the last parameter (nothing after it)', () => {
-    expect(Solution.getParamValueForName('count-to', ['fizzbuzz', '--count-to'])).toBeUndefined();
+    expect(Loader.getParamValueForName('count-to', ['fizzbuzz', '--count-to'])).toBeUndefined();
   });
   it('returns the value of the argument that comes after the supplied parameter name when that parameter name is found', () => {
-    expect(Solution.getParamValueForName('count-to', ['fizzbuzz', '--count-to', '50'])).toBe('50');
+    expect(Loader.getParamValueForName('count-to', ['fizzbuzz', '--count-to', '50'])).toBe('50');
   });
 })

@@ -3,7 +3,7 @@ export class Fizzbuzz {
 
   }
 
-  solve() {
+  initial() {
     console.log(`Solving while counting to ${this.countTo}`);
   }
 }

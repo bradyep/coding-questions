@@ -1,6 +1,6 @@
 import { Fizzbuzz } from "./solutions/fizzbuzz.js";
 
-export class Solution {
+export class Loader {
   constructor(private processArgs: string[]) {
     const nodeParamsToOmit = 2;
     this.args = processArgs.slice(nodeParamsToOmit); // remove node and script paths
@@ -23,10 +23,10 @@ export class Solution {
     switch (solution) {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
-        const countToParamValue = Solution.getParamValueForName('count-to', this.args);
+        const countToParamValue = Loader.getParamValueForName('count-to', this.args);
         if (countToParamValue) {
           const fizzbuzz = new Fizzbuzz(+countToParamValue);
-          fizzbuzz.solve();
+          fizzbuzz.initial();
         } else { console.log(`Couldn't get parameters needed for ${solution}`) }
         break;
       case "fibonacci":
