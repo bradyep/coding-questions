@@ -8,11 +8,24 @@ describe('args-to-map', () => {
       expect(returnedMap.size).toBe(1);
       expect(returnedMap.get("should-be-true")).toBe('true');
     });
+    it('sets an option value to true if its an alias that starts with - and is the last parameter in the list', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '-t']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
+      expect(returnedMap.size).toBe(1);
+      expect(returnedMap.get("t")).toBe('true');
+    });
     it('sets an option value to true if it starts with -- and is followed by another argument that also starts with -- aka it is a toggle', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-abc', 'abc']);
       const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
       expect(returnedMap.size).toBe(2);
       expect(returnedMap.get("should-be-true")).toBe('true');
+    });
+    it('sets an option value to true as an alias (starts with -) and is followed by another argument that also starts with -- aka it is a toggle', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-abc', 'abc', '-t']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
+      expect(returnedMap.size).toBe(3);
+      expect(returnedMap.get("should-be-true")).toBe('true');
+      expect(returnedMap.get("t")).toBe('true');
     });
     it('sets an option value if the preceeding argument starts with -- and the next argument does not', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-abc', 'abc']);
@@ -20,18 +33,36 @@ describe('args-to-map', () => {
       expect(returnedMap.size).toBe(1);
       expect(returnedMap.get("should-be-abc")).toBe('abc');
     });
+    it('sets an option value as an alias if the preceeding argument starts with - and the next argument does not', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-abc', 'abc', '-f', 'false']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
+      expect(returnedMap.size).toBe(2);
+      expect(returnedMap.get("should-be-abc")).toBe('abc');
+      expect(returnedMap.get("f")).toBe('false');
+    });
     it('returns an empty Map if it does not find any arguments marked as options', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever']);
       const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
       expect(returnedMap.size).toBe(0);
     });
     it('ignores arguments that do not have an associated option name', () => {
-      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-abc', 'abc', 'def', 'ghi', '--final', 'jkl', 'mno']);
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-abc', 'abc', 'def', 'ghi', '--final', 'jkl', 'mno', '-f', 'false']);
       const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
-      expect(returnedMap.size).toBe(3);
+      expect(returnedMap.size).toBe(4);
       expect(returnedMap.get("should-be-true")).toBe('true');
       expect(returnedMap.get("should-be-abc")).toBe('abc');
       expect(returnedMap.get("final")).toBe('jkl');
+      expect(returnedMap.get("f")).toBe('false');
+    });
+    it('ignores arguments that do not have an associated option name and handles an alias at the beginning', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '-n', '9000', '--should-be-true', '--should-be-abc', 'abc', 'def', 'ghi', '--final', 'jkl', 'mno', '-f', 'false']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
+      expect(returnedMap.size).toBe(5);
+      expect(returnedMap.get("should-be-true")).toBe('true');
+      expect(returnedMap.get("should-be-abc")).toBe('abc');
+      expect(returnedMap.get("final")).toBe('jkl');
+      expect(returnedMap.get("f")).toBe('false');
+      expect(returnedMap.get("n")).toBe('9000');
     });
     it('should return a map with all the option values as strings if the attemptTypeConversion parameter was omitted', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno']);
@@ -41,14 +72,24 @@ describe('args-to-map', () => {
       expect(returnedMap.get("should-be-123")).toBe('123');
       expect(returnedMap.get("final")).toBe('jkl');
     });
+    it('should return a map with all the option values as strings if the attemptTypeConversion parameter was submitted as false', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno', '-n', '987']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, false);
+      expect(returnedMap.size).toBe(4);
+      expect(returnedMap.get("should-be-true")).toBe('true');
+      expect(returnedMap.get("should-be-123")).toBe('123');
+      expect(returnedMap.get("final")).toBe('jkl');
+      expect(returnedMap.get("n")).toBe('987');
+    });
   });
 
   describe('type conversion requested', () => {
     it('should return a map with all the option values as specific types (string, boolean, number) if the attemptTypeConversion parameter was true', () => {
-      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno']);
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno', '-f', 'false']);
       const returnedMap = ArgsToMap.getArgsAsMap(testArgs, true);
-      expect(returnedMap.size).toBe(3);
+      expect(returnedMap.size).toBe(4);
       expect(returnedMap.get("should-be-true")).toBe(true);
+      expect(returnedMap.get("f")).toBe(false);
       expect(returnedMap.get("should-be-123")).toBe(123);
       expect(returnedMap.get("final")).toBe('jkl');
     });

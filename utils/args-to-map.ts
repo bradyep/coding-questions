@@ -13,11 +13,18 @@ export class ArgsToMap {
 
     // Put together Map with string values first
     for (const userArg of processArgs) {
+      // Option names begin with --
       if (userArg.indexOf('--') === 0) {
         optionName = userArg.substring(2);
         argsMapStringValues.set(optionName, 'true');  // we'll replace 'true' if next arg is an option value
         lastArgWasOptionName = true;
-      } else {
+      // Option name aliases begin with -
+      } else if (userArg.indexOf('-') === 0) {
+        optionName = userArg.substring(1);
+        argsMapStringValues.set(optionName, 'true');  // we'll replace 'true' if next arg is an option value
+        lastArgWasOptionName = true;
+      }
+       else {
         if (lastArgWasOptionName) {
           optionValue = userArg;
           argsMapStringValues.set(optionName, optionValue);
