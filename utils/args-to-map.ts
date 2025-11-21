@@ -6,24 +6,49 @@ export class ArgsToMap {
   }
 
   static getArgsAsMap<T extends boolean = false>(processArgs: string[], attemptTypeConversion: T = false as T): ProcessedMap<T> {
-    const nodeParamsToOmit = 2;
-    const userArgs: string[] = process.argv.slice(nodeParamsToOmit); // remove node and script paths
+    // QUESTION: Do we need the two lines below? Probably not. 
+    // const nodeParamsToOmit = 2;
+    // const userArgs: string[] = process.argv.slice(nodeParamsToOmit); // remove node and script paths
+    let lastArgWasOptionName = false;
+    const argsMapStringValues = new Map<string, string>();
+    let optionName = '';
+    let optionValue: string;
 
-    for (const userArg of userArgs) {
+    // Put together Map with string values first
+    for (const userArg of processArgs) {
       if (userArg.indexOf('--') === 0) {
-        const optionName = userArg.substring(2);
-        const optionValue = 'true';
+        optionName = userArg.substring(2);
+        argsMapStringValues.set(optionName, 'true');  // we'll replace 'true' if next arg is an option value
+        lastArgWasOptionName = true;
+      } else {
+        if (lastArgWasOptionName) {
+          optionValue = userArg;
+          argsMapStringValues.set(optionName, optionValue);
+          lastArgWasOptionName = false;
+        }
       }
     }
 
+    // If asked to do so, attempt to convert arguments to their likely intended types
     if (attemptTypeConversion) {
-      const argsMap = new Map<string, string | boolean | number>();
+      const argsMapTypedValues = new Map<string, string | boolean | number>();
+      for (const [key, value] of argsMapStringValues) {
+        const cleanedValue = value.trim().toLowerCase();
 
-      return argsMap as ProcessedMap<T>;
+        if (cleanedValue === 'true') {
+          argsMapTypedValues.set(key, true);
+        } else if (cleanedValue === 'false') {
+          argsMapTypedValues.set(key, false);
+        } else if (/^\d+$/.test(cleanedValue)) {
+          argsMapTypedValues.set(key, +cleanedValue);
+        } else {
+          argsMapTypedValues.set(key, value);
+        }
+      }
+
+      return argsMapTypedValues as ProcessedMap<T>;
     } else {
-      const argsMap = new Map<string, string>();
-
-      return argsMap as ProcessedMap<T>;
+      return argsMapStringValues as ProcessedMap<T>;
     }
   }
 }

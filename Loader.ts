@@ -3,7 +3,9 @@ import { Fizzbuzz } from "./solutions/fizzbuzz.js";
 export class Loader {
   constructor(private processArgs: string[]) {
     const nodeParamsToOmit = 2;
+    // Toggle commenting out lines below to see what the node the script path arguments look like
     this.args = processArgs.slice(nodeParamsToOmit); // remove node and script paths
+    // this.args = processArgs;
   }
 
   private args: string[];
