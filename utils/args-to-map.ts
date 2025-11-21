@@ -6,9 +6,6 @@ export class ArgsToMap {
   }
 
   static getArgsAsMap<T extends boolean = false>(processArgs: string[], attemptTypeConversion: T = false as T): ProcessedMap<T> {
-    // QUESTION: Do we need the two lines below? Probably not. 
-    // const nodeParamsToOmit = 2;
-    // const userArgs: string[] = process.argv.slice(nodeParamsToOmit); // remove node and script paths
     let lastArgWasOptionName = false;
     const argsMapStringValues = new Map<string, string>();
     let optionName = '';
