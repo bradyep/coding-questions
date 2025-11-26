@@ -83,6 +83,34 @@ describe('args-to-map', () => {
     });
   });
 
+  describe('handling alias mapping', () => {
+    it('sets values for aliases using the option name specified in the AliasMappings', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '-t', '-n', '123']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, { 't': 'should-be-true', 'n': 'should-be-123' }, false);
+      expect(returnedMap.size).toBe(2);
+      expect(returnedMap.get("should-be-true")).toBe('true');
+      expect(returnedMap.get("should-be-123")).toBe('123');
+    });
+    it('uses just the first character of an alias when there is no alias mapping', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '-nnn', '123']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs);
+      expect(returnedMap.size).toBe(1);
+      expect(returnedMap.get("n")).toBe('123');
+    });
+    it('uses the last supplied value for repeated options with no alias mapping', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-123', '999', '--should-be-123', '123']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, {  }, false);
+      expect(returnedMap.size).toBe(1);
+      expect(returnedMap.get("should-be-123")).toBe('123');
+    });
+    it('uses the last supplied value for repeated options WITH alias mapping', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-123', '999', '-n', '123']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, { 'n': 'should-be-123' });
+      expect(returnedMap.size).toBe(1);
+      expect(returnedMap.get("should-be-123")).toBe('123');
+    });
+  })
+
   describe('type conversion requested', () => {
     it('should return a map with all the option values as specific types (string, boolean, number) if the attemptTypeConversion parameter was true', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno', '-f', 'false']);
@@ -92,6 +120,13 @@ describe('args-to-map', () => {
       expect(returnedMap.get("f")).toBe(false);
       expect(returnedMap.get("should-be-123")).toBe(123);
       expect(returnedMap.get("final")).toBe('jkl');
+    });
+    it('sets values for aliases using the option name specified in the AliasMappings with converted types', () => {
+      const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '-t', '-n', '123']);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, { 't': 'should-be-true', 'n': 'should-be-123' }, true);
+      expect(returnedMap.size).toBe(2);
+      expect(returnedMap.get("should-be-true")).toBe(true);
+      expect(returnedMap.get("should-be-123")).toBe(123);
     });
   });
 });

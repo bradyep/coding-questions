@@ -22,7 +22,7 @@ export class ArgsToMap {
         lastArgWasOptionName = true;
       // Option name aliases begin with -
       } else if (userArg.indexOf('-') === 0) {
-        optionName = userArg.substring(1);
+        optionName = userArg.substring(1, 2); // option name is just the first letter for an alias
         // Check if we have an alias mapping and use that if we do
         if (aliases[optionName as SingleCharacter<string>]) {
           optionName = aliases[optionName as SingleCharacter<string>];
@@ -39,7 +39,7 @@ export class ArgsToMap {
       }
     }
 
-    // If asked to do so, attempt to convert arguments to their likely intended types
+    // If asked to do so, attempt to convert arguments to their intended types
     if (attemptTypeConversion) {
       const argsMapTypedValues = new Map<string, string | boolean | number>();
       for (const [key, value] of argsMapStringValues) {
