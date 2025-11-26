@@ -74,7 +74,7 @@ describe('args-to-map', () => {
     });
     it('should return a map with all the option values as strings if the attemptTypeConversion parameter was submitted as false', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno', '-n', '987']);
-      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, false);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, {}, false);
       expect(returnedMap.size).toBe(4);
       expect(returnedMap.get("should-be-true")).toBe('true');
       expect(returnedMap.get("should-be-123")).toBe('123');
@@ -86,7 +86,7 @@ describe('args-to-map', () => {
   describe('type conversion requested', () => {
     it('should return a map with all the option values as specific types (string, boolean, number) if the attemptTypeConversion parameter was true', () => {
       const testArgs = (['C:\Program Files\nodejs\node.exe', 'D:\Dev\whatever', '--should-be-true', '--should-be-123', '123', 'def', 'ghi', '--final', 'jkl', 'mno', '-f', 'false']);
-      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, true);
+      const returnedMap = ArgsToMap.getArgsAsMap(testArgs, {}, true);
       expect(returnedMap.size).toBe(4);
       expect(returnedMap.get("should-be-true")).toBe(true);
       expect(returnedMap.get("f")).toBe(false);

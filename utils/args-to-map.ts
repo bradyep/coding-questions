@@ -1,11 +1,13 @@
+type SingleCharacter<T extends string> = T extends `${infer C}` ? (
+  C extends `${infer _}${infer _}` ? never : C
+) : never;
+
 type ProcessedMap<T extends boolean> = T extends true ? Map<string, string | boolean | number> : Map<string, string>;
 
+type AliasMapping = Record<SingleCharacter<string>, string>;
+
 export class ArgsToMap {
-  constructor() {
-
-  }
-
-  static getArgsAsMap<T extends boolean = false>(processArgs: string[], attemptTypeConversion: T = false as T): ProcessedMap<T> {
+  static getArgsAsMap<T extends boolean = false>(processArgs: string[], aliases: AliasMapping = {}, attemptTypeConversion: T = false as T): ProcessedMap<T> {
     let lastArgWasOptionName = false;
     const argsMapStringValues = new Map<string, string>();
     let optionName = '';
@@ -21,6 +23,10 @@ export class ArgsToMap {
       // Option name aliases begin with -
       } else if (userArg.indexOf('-') === 0) {
         optionName = userArg.substring(1);
+        // Check if we have an alias mapping and use that if we do
+        if (aliases[optionName as SingleCharacter<string>]) {
+          optionName = aliases[optionName as SingleCharacter<string>];
+        }
         argsMapStringValues.set(optionName, 'true');  // we'll replace 'true' if next arg is an option value
         lastArgWasOptionName = true;
       }
