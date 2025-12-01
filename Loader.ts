@@ -1,35 +1,30 @@
 import { Fizzbuzz } from "./solutions/fizzbuzz.js";
+import { ArgsToMap } from "args-to-map";
 
 export class Loader {
-  constructor(private processArgs: string[]) {
-    const nodeParamsToOmit = 2;
-    // Toggle commenting out lines below to see what the node the script path arguments look like
-    this.args = processArgs.slice(nodeParamsToOmit); // remove node and script paths
-    // this.args = processArgs;
+  constructor(processArgs: string[]) {
+    this.solutionNameArg = processArgs[2];  // First two items in process.argv are node and script paths
+    this.solutionArgsMap = ArgsToMap.getArgsAsMap(processArgs.slice(3), { "c": "count-to" });  // remove node and script paths as well as solution name
   }
 
-  private args: string[];
+  private solutionNameArg: string | undefined;
+  private solutionArgsMap: Map<string, string>;
 
   run() {
-    if (this.args.length < 1) {
+    if (!this.solutionNameArg) {
       console.log('Must supply a solution to run');
       process.exit(0);
     }
 
-    this.args.forEach((arg, index) => {
-      console.log(`Argument ${index + 1}: ${arg}`)
-    });
-
-    const solution: string = this.args[0] ?? '';
-
-    switch (solution) {
+    switch (this.solutionNameArg) {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
-        const countToParamValue = Loader.getParamValueForName('count-to', this.args);
+        const countToParamValue = this.solutionArgsMap.get('count-to'); 
+        // Loader.getParamValueForName('count-to', this.args);
         if (countToParamValue) {
           const fizzbuzz = new Fizzbuzz(+countToParamValue);
           fizzbuzz.initial();
-        } else { console.log(`Couldn't get parameters needed for ${solution}`) }
+        } else { console.log(`Couldn't get parameters needed for ${this.solutionNameArg}`) }
         break;
       case "fibonacci":
         console.log("loading fibonacci solution");
@@ -38,30 +33,7 @@ export class Loader {
         console.log("loading anagram solution");
         break;
       default:
-        console.log(`solution ${solution} not found`);
+        console.log(`solution ${this.solutionNameArg} not found`);
     }
   }
-
-  static getParamValueForName(paramName: string, parameters: string[]): string | undefined {
-    const paramNameIndex = parameters.indexOf('--' + paramName)
-    if (paramNameIndex < 0) {
-      console.log(`Can't find parameter name: ${paramName}`);
-    } else {
-      console.log(`Found ${paramName} | args.length: ${parameters.length} | paramNameIndex: ${paramNameIndex}`);
-      if (parameters.length - 1 <= paramNameIndex) {
-        console.log(`Found param name at ${paramNameIndex} but size of array is ${parameters.length}, which is too small, so can't get value`);
-      } else {
-        const paramValue = parameters[paramNameIndex + 1];
-        if (paramValue) {
-
-          return paramValue;
-        } else {
-          console.log(`Param value at position ${paramNameIndex + 1} is undefined`)
-        }
-      }
-    }
-
-    return undefined;
-  }
-
 }

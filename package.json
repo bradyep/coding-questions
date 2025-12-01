@@ -17,5 +17,8 @@
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "args-to-map": "^1.0.1"
   }
 }

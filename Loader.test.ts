@@ -67,20 +67,3 @@ describe('run', () => {
     fizzbuzzSpy.mockRestore();
   })
 })
-
-describe('getParamValueForName', () => {
-  it('returns undefined if it cannot find the parameter name', () => {
-    expect(Loader.getParamValueForName('weird-param-name', ['fizzbuzz', '--count-to', '50'])).toBeUndefined();
-  });
-
-  it('returns undefined if it cannot find the parameter name because it is missing the double dash syntax', () => {
-    expect(Loader.getParamValueForName('count-to', ['fizzbuzz', 'count-to', '50'])).toBeUndefined();
-  });
-
-  it('returns undefined the supplied parameter name is the last parameter (nothing after it)', () => {
-    expect(Loader.getParamValueForName('count-to', ['fizzbuzz', '--count-to'])).toBeUndefined();
-  });
-  it('returns the value of the argument that comes after the supplied parameter name when that parameter name is found', () => {
-    expect(Loader.getParamValueForName('count-to', ['fizzbuzz', '--count-to', '50'])).toBe('50');
-  });
-})
