@@ -3,6 +3,7 @@ import { ArgsToMap } from "args-to-map";
 
 export class Loader {
   constructor(processArgs: string[]) {
+    // console.log(processArgs); // debugging
     this.solutionNameArg = processArgs[2];  // First two items in process.argv are node and script paths
     this.solutionArgsMap = ArgsToMap.getArgsAsMap(processArgs.slice(3), { "c": "count-to" });  // remove node and script paths as well as solution name
   }
@@ -20,7 +21,6 @@ export class Loader {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
         const countToParamValue = this.solutionArgsMap.get('count-to'); 
-        // Loader.getParamValueForName('count-to', this.args);
         if (countToParamValue) {
           const fizzbuzz = new Fizzbuzz(+countToParamValue);
           fizzbuzz.initial();
