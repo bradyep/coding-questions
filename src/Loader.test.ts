@@ -1,6 +1,6 @@
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import { Loader } from "./Loader.js";
-import { Fizzbuzz } from "./solutions/fizzbuzz.js";
+import { Loader } from "./Loader";
+import { Fizzbuzz } from "./solutions/fizzbuzz";
 
 describe('constructor', () => {
   it('removes the first two parameters (note and script paths) from arguments', () => {

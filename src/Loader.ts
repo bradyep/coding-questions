@@ -3,7 +3,6 @@ import { ArgsToMap } from "args-to-map";
 
 export class Loader {
   constructor(processArgs: string[]) {
-    // console.log(processArgs); // debugging
     this.solutionNameArg = processArgs[2];  // First two items in process.argv are node and script paths
     this.solutionArgs = processArgs.slice(3); // remove node and script paths as well as solution name
   }
@@ -23,11 +22,8 @@ export class Loader {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
         const solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" });
-        const countToParamValue = solutionArgsMap.get('count-to'); 
-        if (countToParamValue) {
-          const fizzbuzz = new Fizzbuzz(+countToParamValue);
-          consoleOutput = fizzbuzz.solve();
-        } else { console.log(`Couldn't get parameters needed for ${this.solutionNameArg}`) }
+        const fizzbuzz = new Fizzbuzz(solutionArgsMap);
+        consoleOutput = fizzbuzz.solve();
         break;
       case "fibonacci":
         console.log("loading fibonacci solution");

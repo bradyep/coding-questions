@@ -1,6 +1,8 @@
 import { SolutionType } from "./SolutionType"
 
-export interface Solution {
-  solve: (st: SolutionType) => string[]
-  verifyParams: (params: Map<string, string | boolean | number>) => boolean
+export abstract class Solution {
+  constructor(protected params: Map<string, string | boolean | number>) {}
+
+  abstract verifyParams(): boolean;
+  abstract solve(st: SolutionType): string[]
 }
