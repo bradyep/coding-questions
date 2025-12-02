@@ -1,4 +1,4 @@
-import { Fizzbuzz } from "./solutions/fizzbuzz.js";
+import { Fizzbuzz } from "./solutions/fizzbuzz";
 import { ArgsToMap } from "args-to-map";
 
 export class Loader {
@@ -17,6 +17,8 @@ export class Loader {
       process.exit(0);
     }
 
+    let consoleOutput: string[] = [];
+
     switch (this.solutionNameArg) {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
@@ -24,7 +26,7 @@ export class Loader {
         const countToParamValue = solutionArgsMap.get('count-to'); 
         if (countToParamValue) {
           const fizzbuzz = new Fizzbuzz(+countToParamValue);
-          fizzbuzz.initial();
+          consoleOutput = fizzbuzz.solve();
         } else { console.log(`Couldn't get parameters needed for ${this.solutionNameArg}`) }
         break;
       case "fibonacci":
@@ -35,6 +37,14 @@ export class Loader {
         break;
       default:
         console.log(`solution ${this.solutionNameArg} not found`);
+    }
+
+    if (consoleOutput.length > 0) {
+      for (const line in consoleOutput) {
+        console.log(line);
+      }
+    } else {
+      console.log(`Did not receive anything to write to console`);
     }
   }
 }
