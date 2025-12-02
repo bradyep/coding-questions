@@ -5,11 +5,11 @@ export class Loader {
   constructor(processArgs: string[]) {
     // console.log(processArgs); // debugging
     this.solutionNameArg = processArgs[2];  // First two items in process.argv are node and script paths
-    this.solutionArgsMap = ArgsToMap.getArgsAsMap(processArgs.slice(3), { "c": "count-to" });  // remove node and script paths as well as solution name
+    this.solutionArgs = processArgs.slice(3); // remove node and script paths as well as solution name
   }
 
   private solutionNameArg: string | undefined;
-  private solutionArgsMap: Map<string, string>;
+  private solutionArgs: string[];
 
   run() {
     if (!this.solutionNameArg) {
@@ -20,7 +20,8 @@ export class Loader {
     switch (this.solutionNameArg) {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
-        const countToParamValue = this.solutionArgsMap.get('count-to'); 
+        const solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" });
+        const countToParamValue = solutionArgsMap.get('count-to'); 
         if (countToParamValue) {
           const fizzbuzz = new Fizzbuzz(+countToParamValue);
           fizzbuzz.initial();
