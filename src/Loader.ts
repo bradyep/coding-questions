@@ -21,7 +21,7 @@ export class Loader {
     switch (this.solutionNameArg) {
       case "fizzbuzz":
         console.log("loading fizzbuzz solution");
-        const solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" });
+        const solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" }, true);
         const fizzbuzz = new Fizzbuzz(solutionArgsMap);
         consoleOutput = fizzbuzz.solve();
         break;
@@ -36,7 +36,7 @@ export class Loader {
     }
 
     if (consoleOutput.length > 0) {
-      for (const line in consoleOutput) {
+      for (const line of consoleOutput) {
         console.log(line);
       }
     } else {
