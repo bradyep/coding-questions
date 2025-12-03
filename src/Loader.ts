@@ -3,11 +3,14 @@ import { ArgsToMap } from "args-to-map";
 
 export class Loader {
   constructor(processArgs: string[]) {
-    this.solutionNameArg = processArgs[2];  // First two items in process.argv are node and script paths
-    this.solutionArgs = processArgs.slice(3); // remove node and script paths as well as solution name
+    const NODE_SCRIPT_PATH_PARAMS = 2;  // First two items in process.argv are node and script paths
+    this.solutionNameArg = processArgs[NODE_SCRIPT_PATH_PARAMS];
+    this.solutionType = processArgs[NODE_SCRIPT_PATH_PARAMS + 1];
+    this.solutionArgs = processArgs.slice(NODE_SCRIPT_PATH_PARAMS + 2);
   }
 
   private solutionNameArg: string | undefined;
+  private solutionType: string | undefined;
   private solutionArgs: string[];
 
   run() {
@@ -20,7 +23,6 @@ export class Loader {
 
     switch (this.solutionNameArg) {
       case "fizzbuzz":
-        console.log("loading fizzbuzz solution");
         const solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" }, true);
         const fizzbuzz = new Fizzbuzz(solutionArgsMap);
         consoleOutput = fizzbuzz.solve();
