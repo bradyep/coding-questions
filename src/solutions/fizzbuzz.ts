@@ -1,4 +1,5 @@
 import { Solution } from "./Solution";
+import { SolutionType } from "./SolutionType";
 
 export class Fizzbuzz extends Solution {
   constructor(params: Map<string, string | boolean | number>) {
@@ -22,9 +23,16 @@ export class Fizzbuzz extends Solution {
     }
   }
 
-  solve() {
+  solve(solutionType: SolutionType) {
     if (this.paramsAreValid) {
-      return [`Solving while counting to ${this.countTo}`];
+      console.log(`SolutionType: ${SolutionType[solutionType]} | countTo: ${this.countTo}`);
+
+      switch (solutionType) {
+        case SolutionType.optimized:
+          return [`optimized`];
+        default:
+          return [`initial`];
+      }
     } else {
       return [`Invalid parameters`];
     }
