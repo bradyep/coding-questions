@@ -39,7 +39,7 @@ describe('run', () => {
   });
 
   xit('instantiates a fizzbuzz object and calls solve() on it if it is specified in the parameters with a valid count-to', () => {
-    const mockInitial = jest.fn();
+    const mockInitial = jest.fn(() => []);
     const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'solve').mockImplementation(mockInitial);
     
     const solution = new Loader([]);
@@ -53,7 +53,7 @@ describe('run', () => {
   })
 
   xit('does not create a new instance of Fizzbuzz or call initial() if the parameters are not valid', () => {
-    const mockInitial = jest.fn();
+    const mockInitial = jest.fn(() => []);
     const fizzbuzzSpy = jest.spyOn(Fizzbuzz.prototype, 'solve').mockImplementation(mockInitial);
     
     const solution = new Loader([]);

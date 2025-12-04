@@ -1,8 +1,9 @@
 import { Solution } from "./Solution";
 import { SolutionType } from "./SolutionType";
+import type { SolutionParams } from "./SolutionParams"
 
 export class Fizzbuzz extends Solution {
-  constructor(params: Map<string, string | boolean | number>) {
+  constructor(params: SolutionParams) {
     super(params);
     this.paramsAreValid = this.verifyParams();
   }
@@ -31,10 +32,21 @@ export class Fizzbuzz extends Solution {
         case SolutionType.optimized:
           return [`optimized`];
         default:
-          return [`initial`];
+          return this.initialImplementation(this.countTo);
       }
     } else {
       return [`Invalid parameters`];
     }
+  }
+
+  private initialImplementation(countTo: number) {
+    const results = [];
+    for (let i = 1; i <= countTo; i++) {
+      let output: string = '';
+      if (i % 3 === 0) { output += 'fizz'; }
+      if (i % 5 === 0) { output += 'buzz'; }
+      if (output.length > 0) { results.push(output); }
+    }
+    return results;
   }
 }
