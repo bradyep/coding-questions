@@ -1,6 +1,8 @@
 import { Fizzbuzz } from "./solutions/fizzbuzz";
+import { Palindrome } from "./solutions/palindrome";
 import { ArgsToMap } from "args-to-map";
 import { SolutionType } from "./solutions/SolutionType";
+import type { SolutionParams } from "./solutions/SolutionParams";
 
 export class Loader {
   constructor(processArgs: string[]) {
@@ -27,12 +29,18 @@ export class Loader {
     }
 
     let consoleOutput: string[] = [];
+    let solutionArgsMap: SolutionParams | undefined = undefined;
 
     switch (this.solutionNameArg) {
       case "fizzbuzz":
-        const solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" }, true);
+        solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" }, true);
         const fizzbuzz = new Fizzbuzz(solutionArgsMap);
         consoleOutput = fizzbuzz.solve(this.solutionType);
+        break;
+      case "palindrome":
+        solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "w": "words" }, true);
+        const palindrome = new Palindrome(solutionArgsMap);
+        consoleOutput = palindrome.solve(this.solutionType);
         break;
       case "fibonacci":
         console.log("loading fibonacci solution");
