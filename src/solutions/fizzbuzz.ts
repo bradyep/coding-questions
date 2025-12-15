@@ -24,13 +24,13 @@ export class Fizzbuzz extends Solution {
     }
   }
 
-  solve(solutionType: SolutionType) {
+  solve(solutionType: SolutionType): string[] {
     if (this.paramsAreValid) {
       console.log(`SolutionType: ${SolutionType[solutionType]} | countTo: ${this.countTo}`);
 
       switch (solutionType) {
-        case SolutionType.optimized:
-          return [`optimized`];
+        case SolutionType.functional:
+          return this.functional(this.countTo);
         default:
           return this.initialImplementation(this.countTo);
       }
@@ -39,7 +39,7 @@ export class Fizzbuzz extends Solution {
     }
   }
 
-  private initialImplementation(countTo: number) {
+  private initialImplementation(countTo: number): string[] {
     const results = [];
     for (let i = 1; i <= countTo; i++) {
       let output: string = '';
@@ -48,5 +48,15 @@ export class Fizzbuzz extends Solution {
       if (output.length > 0) { results.push(output); }
     }
     return results;
+  }
+
+  private functional(countTo: number): string[] {
+    const fizzCheck = (x: number) => { return x % 3 === 0 ? 'fizz' : '' }
+    const buzzCheck = (x: number) => { return x % 5 === 0 ? 'buzz' : '' }
+    const numbers: number[] = Array(countTo).fill(0).map((_, i) => i + 1);
+    
+    return numbers
+      .map(x => fizzCheck(x) + buzzCheck(x))
+      .filter(x => x !== '');
   }
 }
