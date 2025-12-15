@@ -9,5 +9,7 @@ describe('palindrome implementations', () => {
     const pd = new Palindrome(params);
     const initialResult = pd.solve(SolutionType.initial);
     expect(initialResult).toStrictEqual(['racecar true', 'anhata false', 'boob true', 'mhlem false', 'madam true', 'yummy false', 'kayak true']);
+    const optimizedResult = pd.solve(SolutionType.optimized);
+    expect(optimizedResult).toStrictEqual(['racecar true', 'anhata false', 'boob true', 'mhlem false', 'madam true', 'yummy false', 'kayak true']);
   })
 });
