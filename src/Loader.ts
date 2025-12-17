@@ -1,5 +1,6 @@
 import { Fizzbuzz } from "./solutions/fizzbuzz";
 import { Palindrome } from "./solutions/palindrome";
+import { Anagram } from "./solutions/anagram";
 import { ArgsToMap } from "args-to-map";
 import { SolutionType } from "./solutions/SolutionType";
 import type { SolutionParams } from "./solutions/SolutionParams";
@@ -42,11 +43,13 @@ export class Loader {
         const palindrome = new Palindrome(solutionArgsMap);
         consoleOutput = palindrome.solve(this.solutionType);
         break;
+      case "anagram":
+        solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "w": "words" }, true);
+        const anagram = new Anagram(solutionArgsMap);
+        consoleOutput = anagram.solve(this.solutionType);
+        break;
       case "fibonacci":
         console.log("loading fibonacci solution");
-        break;
-      case "anagram":
-        console.log("loading anagram solution");
         break;
       default:
         console.log(`solution ${this.solutionNameArg} not found`);
