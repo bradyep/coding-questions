@@ -9,7 +9,7 @@ describe('anagram implementations', () => {
     const ag = new Anagram(params);
     const initialResult = ag.solve(SolutionType.initial);
     expect(initialResult).toStrictEqual(['evil vile true', 'apple paled false', 'flow wolf true', 'grammer mergers false', 'slate least true']);
-    // const optimizedResult = ag.solve(SolutionType.optimized);
-    // expect(optimizedResult).toStrictEqual(['racecar true', 'anhata false', 'boob true', 'mhlem false', 'madam true', 'yummy false', 'kayak true']);
+    const optimizedResult = ag.solve(SolutionType.optimized);
+    expect(optimizedResult).toStrictEqual(['evil vile true', 'apple paled false', 'flow wolf true', 'grammer mergers false', 'slate least true']);
   })
 });

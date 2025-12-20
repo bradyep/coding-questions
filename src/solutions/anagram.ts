@@ -54,6 +54,8 @@ export class Anagram extends Solution {
       console.log(`SolutionType: ${SolutionType[solutionType]} | possible anagrams: ${this.possibleAnagrams.length}`);
 
       switch (solutionType) {
+        case SolutionType.optimized:
+          return this.optimized(this.possibleAnagrams);
         default:
           return this.initial(this.possibleAnagrams);
       }
@@ -99,6 +101,21 @@ export class Anagram extends Solution {
       const firstBreakdown = generateCharacterBreakdown(possibleAnagram.firstWord);
       const secondBreakdown = generateCharacterBreakdown(possibleAnagram.secondWord);
       const isAnagram = breakdownsAreEqual(firstBreakdown, secondBreakdown);
+      output.push(`${possibleAnagram.firstWord} ${possibleAnagram.secondWord} ${isAnagram}`);
+    }
+
+    return output;
+  }
+
+  private optimized(possibleAnagrams: PossibleAnagram[]): string[] {
+    const output: string[] = [];
+
+    for (const possibleAnagram of possibleAnagrams) {
+      const firstSortedLetters = possibleAnagram.firstWord.split('').sort();
+      const secondSortedLetters = possibleAnagram.secondWord.split('').sort();
+      const isAnagram = firstSortedLetters.every((element, index) => {
+        return element === secondSortedLetters[index];
+      })
       output.push(`${possibleAnagram.firstWord} ${possibleAnagram.secondWord} ${isAnagram}`);
     }
 
