@@ -9,5 +9,10 @@ describe('fibonacci implementations', () => {
     const fns = new Fibonacci(params);
     const initialResult = fns.solve(SolutionType.initial);
     expect(initialResult).toStrictEqual(['8']);
+
+    const secondParams: SolutionParams = new Map([['nthelement', 51]])
+    const secondFns = new Fibonacci(secondParams);
+    const secondResult = secondFns.solve(SolutionType.initial);
+    expect(secondResult).toStrictEqual(['12,586,269,025']);
   });
 });
