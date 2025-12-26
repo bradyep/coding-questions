@@ -4,6 +4,7 @@ import { Anagram } from "./solutions/anagram";
 import { ArgsToMap } from "args-to-map";
 import { SolutionType } from "./solutions/SolutionType";
 import type { SolutionParams } from "./solutions/SolutionParams";
+import { Fibonacci } from "./solutions/fibonacci";
 
 export class Loader {
   constructor(processArgs: string[]) {
@@ -49,7 +50,9 @@ export class Loader {
         consoleOutput = anagram.solve(this.solutionType);
         break;
       case "fibonacci":
-        console.log("loading fibonacci solution");
+        solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "nthelement" }, true);
+        const fibonacci = new Fibonacci(solutionArgsMap);
+        consoleOutput = fibonacci.solve(this.solutionType);
         break;
       default:
         console.log(`solution ${this.solutionNameArg} not found`);
