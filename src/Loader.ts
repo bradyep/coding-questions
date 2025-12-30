@@ -5,6 +5,7 @@ import { ArgsToMap } from "args-to-map";
 import { SolutionType } from "./solutions/SolutionType";
 import type { SolutionParams } from "./solutions/SolutionParams";
 import { Fibonacci } from "./solutions/fibonacci";
+import { Prime } from "./solutions/prime";
 
 export class Loader {
   constructor(processArgs: string[]) {
@@ -53,6 +54,11 @@ export class Loader {
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "nthelement" }, true);
         const fibonacci = new Fibonacci(solutionArgsMap);
         consoleOutput = fibonacci.solve(this.solutionType);
+        break;
+      case "prime":
+        solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "numbers" }, false);
+        const prime = new Prime(solutionArgsMap);
+        consoleOutput = prime.solve(this.solutionType);
         break;
       default:
         console.log(`solution ${this.solutionNameArg} not found`);
