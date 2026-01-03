@@ -3,8 +3,8 @@ import type { SolutionParams } from "./SolutionParams";
 import { SolutionType } from "./SolutionType";
 
 export class Fibonacci extends Solution {
-  constructor(params: SolutionParams) {
-    super(params);
+  constructor(params: SolutionParams, debug: boolean = false) {
+    super(params, debug);
     this.paramsAreValid = this.verifyParams();
   }
 
@@ -18,7 +18,7 @@ export class Fibonacci extends Solution {
 
       return true;
     } else {
-      console.log(`Did not receive valid parameter for: nthelement. Received: ${nthelement}`);
+      this.debugLog(`Did not receive valid parameter for: nthelement. Received: ${nthelement}`);
 
       return false;
     }
@@ -38,9 +38,9 @@ export class Fibonacci extends Solution {
   private initial(nthElement: number): string[] {
     const fiboNumbers: number[] = [0, 1];
     for (let i = 0; i < nthElement; i++) {
-      console.log(`fiboNumbers[i] = ${fiboNumbers[i]}`);
+      this.debugLog(`fiboNumbers[i] = ${fiboNumbers[i]}`);
       if (fiboNumbers[i] === undefined) {
-        console.log(`For element at array position ${i} Adding ${fiboNumbers[i - 2]!} and ${fiboNumbers[i - 1]}`);
+        this.debugLog(`For element at array position ${i} Adding ${fiboNumbers[i - 2]!} and ${fiboNumbers[i - 1]}`);
         fiboNumbers[i] = fiboNumbers[i - 2]! + fiboNumbers[i - 1]!;
       }
     }
@@ -49,7 +49,7 @@ export class Fibonacci extends Solution {
     if (returnValue) {
       return [returnValue.toLocaleString()];
     } else {
-      console.log(`No element found in position: ${nthElement}`);
+      this.debugLog(`No element found in position: ${nthElement}`);
 
       return [];
     }

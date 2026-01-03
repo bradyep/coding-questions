@@ -17,13 +17,14 @@ export class Loader {
     const lookup = SolutionType[typeArg as keyof typeof SolutionType];    
     // Ensure we got a number (valid enum value), otherwise default to initial
     this.solutionType = (typeof lookup === 'number') ? lookup : SolutionType.initial;
-
     this.solutionArgs = processArgs.slice(NODE_SCRIPT_PATH_PARAMS + 2);
+    if (this.solutionArgs.includes('--debug')) { this.debug = true; }
   }
 
   private solutionNameArg: string | undefined;
   private solutionType: SolutionType;
   private solutionArgs: string[];
+  private debug: boolean = false;
 
   run() {
     if (!this.solutionNameArg) {
@@ -37,27 +38,27 @@ export class Loader {
     switch (this.solutionNameArg) {
       case "fizzbuzz":
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "c": "count-to" }, true);
-        const fizzbuzz = new Fizzbuzz(solutionArgsMap);
+        const fizzbuzz = new Fizzbuzz(solutionArgsMap, this.debug);
         consoleOutput = fizzbuzz.solve(this.solutionType);
         break;
       case "palindrome":
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "w": "words" }, true);
-        const palindrome = new Palindrome(solutionArgsMap);
+        const palindrome = new Palindrome(solutionArgsMap, this.debug);
         consoleOutput = palindrome.solve(this.solutionType);
         break;
       case "anagram":
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "w": "words" }, true);
-        const anagram = new Anagram(solutionArgsMap);
+        const anagram = new Anagram(solutionArgsMap, this.debug);
         consoleOutput = anagram.solve(this.solutionType);
         break;
       case "fibonacci":
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "nthelement" }, true);
-        const fibonacci = new Fibonacci(solutionArgsMap);
+        const fibonacci = new Fibonacci(solutionArgsMap, this.debug);
         consoleOutput = fibonacci.solve(this.solutionType);
         break;
       case "prime":
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "numbers" }, false);
-        const prime = new Prime(solutionArgsMap);
+        const prime = new Prime(solutionArgsMap, this.debug);
         consoleOutput = prime.solve(this.solutionType);
         break;
       default:

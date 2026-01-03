@@ -3,8 +3,8 @@ import { SolutionType } from "./SolutionType";
 import type { SolutionParams } from "./SolutionParams"
 
 export class Fizzbuzz extends Solution {
-  constructor(params: SolutionParams) {
-    super(params);
+  constructor(params: SolutionParams, debug: boolean = false) {
+    super(params, debug);
     this.paramsAreValid = this.verifyParams();
   }
 
@@ -18,7 +18,7 @@ export class Fizzbuzz extends Solution {
 
       return true;
     } else {
-      console.log('Did not receive valid parameter for: countTo');
+      this.debugLog('Did not receive valid parameter for: countTo');
 
       return false;
     }
@@ -26,7 +26,7 @@ export class Fizzbuzz extends Solution {
 
   solve(solutionType: SolutionType): string[] {
     if (this.paramsAreValid) {
-      console.log(`SolutionType: ${SolutionType[solutionType]} | countTo: ${this.countTo}`);
+      this.debugLog(`SolutionType: ${SolutionType[solutionType]} | countTo: ${this.countTo}`);
 
       switch (solutionType) {
         case SolutionType.functional:

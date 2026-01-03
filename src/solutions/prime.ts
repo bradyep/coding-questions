@@ -3,8 +3,8 @@ import type { SolutionParams } from "./SolutionParams";
 import { SolutionType } from "./SolutionType";
 
 export class Prime extends Solution {
-  constructor(params: SolutionParams) {
-    super(params);
+  constructor(params: SolutionParams, debug: boolean = false) {
+    super(params, debug);
     this.paramsAreValid = this.verifyParams();
   }
 
@@ -20,7 +20,7 @@ export class Prime extends Solution {
 
       return true;
     } else {
-      console.log(`Did not receive valid parameter for: numbers. Received: ${numbersParam}`);
+      this.debugLog(`Did not receive valid parameter for: numbers. Received: ${numbersParam}`);
 
       return false;
     }
@@ -29,6 +29,8 @@ export class Prime extends Solution {
   solve(solutionType: SolutionType): string[] {
     if (this.paramsAreValid) {
       switch (solutionType) {
+        case SolutionType.optimized:
+          return this.optimized(this.numbersToCheck);
         default:
           return this.initial(this.numbersToCheck);
       }
@@ -38,6 +40,36 @@ export class Prime extends Solution {
   }
 
   private initial(numbers: number[]): string[] {
+    const results: string[] = [];
+    for (const currentValue of numbers) {
+      // Non-numbers, negative numbers, 0, 1 and fractions are not prime numbers
+      if (Number.isNaN(currentValue) || !Number.isInteger(currentValue) || currentValue <= 1) {
+        results.push('false');
+      // 2 is a weird number here so handle specifically
+      } else if (currentValue === 2) {
+        results.push('true');
+      }
+      // Handle positive integers greater than 2
+      else {
+        const divisor = 2;
+        const halfwayNumber = Math.floor(currentValue / divisor);
+        let isPrime: boolean = true;
+        // Check all possible divisors
+        for (let i = divisor; i <= halfwayNumber; i++) {
+          if (currentValue % i === 0) {
+            isPrime = false;
+
+            break;
+          }
+        }
+        results.push(isPrime.toString());
+      }
+    }
+
+    return results;
+  }
+
+  private optimized(numbers: number[]): string[] {
     const results: string[] = [];
     for (const currentValue of numbers) {
       // Non-numbers, negative numbers, 0, 1 and fractions are not prime numbers

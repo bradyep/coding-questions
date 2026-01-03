@@ -3,8 +3,8 @@ import type { SolutionParams } from "./SolutionParams";
 import { SolutionType } from "./SolutionType";
 
 export class Palindrome extends Solution {
-  constructor(params: SolutionParams) {
-    super(params);
+  constructor(params: SolutionParams, debug: boolean = false) {
+    super(params, debug);
     this.paramsAreValid = this.verifyParams();
   }
 
@@ -18,7 +18,7 @@ export class Palindrome extends Solution {
 
       return true;
     } else {
-      console.log('Did not receive valid parameter for: countTo');
+      this.debugLog('Did not receive valid parameter for: countTo');
 
       return false;
     }
@@ -26,7 +26,7 @@ export class Palindrome extends Solution {
 
   solve(solutionType: SolutionType): string[] {
     if (this.paramsAreValid) {
-      console.log(`SolutionType: ${SolutionType[solutionType]} | words: ${this.words.join('-')}`);
+      this.debugLog(`SolutionType: ${SolutionType[solutionType]} | words: ${this.words.join('-')}`);
 
       switch (solutionType) {
         case SolutionType.optimized:
@@ -53,7 +53,7 @@ export class Palindrome extends Solution {
     for (const word of words) {
       const backwardsWord = reverse(word);
       const isPalindrome = word === backwardsWord;
-      // console.log(`(INFO) ${word} ${backwardsWord} ${isPalindrome}`);
+      // this.debugLog(`(INFO) ${word} ${backwardsWord} ${isPalindrome}`);
       results.push(`${word} ${isPalindrome}`)
     }
 
@@ -69,7 +69,7 @@ export class Palindrome extends Solution {
       for (let i = 0; i <= lastIndexToEval; i++) {
         const frontLetter = word.substring(i, i + 1);
         const backLetter = word.substring(word.length - i - 1, word.length - i);
-        console.log(`(INFO) word: ${word} | lastIndexToEval: ${lastIndexToEval} | frontLetter: ${frontLetter} | backLetter: ${backLetter}`);
+        this.debugLog(`(INFO) word: ${word} | lastIndexToEval: ${lastIndexToEval} | frontLetter: ${frontLetter} | backLetter: ${backLetter}`);
         if (frontLetter !== backLetter) {
           isPalindrome = false;
           break;

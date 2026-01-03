@@ -11,8 +11,8 @@ const WORD_PAIR_SEPARATOR = '-';
 const ANAGRAM_SET_SEPARATOR = '_';
 
 export class Anagram extends Solution {
-  constructor(params: SolutionParams) {
-    super(params);
+  constructor(params: SolutionParams, debug: boolean = false) {
+    super(params, debug);
     this.paramsAreValid = this.verifyParams();
   }
 
@@ -33,17 +33,17 @@ export class Anagram extends Solution {
           };
           this.possibleAnagrams.push(anagramToCheck);
         } else {
-          console.log(`possible anagrams consist of exactly two words or phrases. Received: ${words.length}`);
+          this.debugLog(`possible anagrams consist of exactly two words or phrases. Received: ${words.length}`);
 
           return false;
         }
       }
 
-      console.log(`Received this many word pairs to check: ${this.possibleAnagrams.length}`);
+      this.debugLog(`Received this many word pairs to check: ${this.possibleAnagrams.length}`);
 
       return true;
     } else {
-      console.log('did not get a string value for words param');
+      this.debugLog('did not get a string value for words param');
 
       return false;
     }
@@ -51,7 +51,7 @@ export class Anagram extends Solution {
 
   solve(solutionType: SolutionType): string[] {
     if (this.paramsAreValid) {
-      console.log(`SolutionType: ${SolutionType[solutionType]} | possible anagrams: ${this.possibleAnagrams.length}`);
+      this.debugLog(`SolutionType: ${SolutionType[solutionType]} | possible anagrams: ${this.possibleAnagrams.length}`);
 
       switch (solutionType) {
         case SolutionType.optimized:
