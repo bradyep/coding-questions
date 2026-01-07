@@ -17,7 +17,7 @@ class QuickSortBlock {
 
   pivotOn(elementIndex: number) {
     const pivotValue = this.elements[elementIndex];
-    if (!pivotValue) {
+    if (pivotValue === undefined) {
       QuickSortBlock.debugLog(`Error: Cannot pivot on: ${pivotValue}`);
 
       return;
@@ -52,7 +52,7 @@ class QuickSortBlock {
   }
 
   getSortedElements(): number[] {
-    if (this.pivotValue) {
+    if (this.pivotValue !== undefined) {
       QuickSortBlock.debugLog(`pivotValue: ${this.pivotValue} | making recursive calls`);
       const leftElements = this.left?.getSortedElements() || [];
       const rightElements = this.right?.getSortedElements() || [];
