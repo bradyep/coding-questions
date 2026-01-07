@@ -6,6 +6,7 @@ import { SolutionType } from "./solutions/SolutionType";
 import type { SolutionParams } from "./solutions/SolutionParams";
 import { Fibonacci } from "./solutions/fibonacci";
 import { Prime } from "./solutions/prime";
+import { QuickSort } from "./solutions/quicksort";
 
 export class Loader {
   constructor(processArgs: string[]) {
@@ -60,6 +61,11 @@ export class Loader {
         solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "numbers" }, false);
         const prime = new Prime(solutionArgsMap, this.debug);
         consoleOutput = prime.solve(this.solutionType);
+        break;
+      case "quicksort":
+        solutionArgsMap = ArgsToMap.getArgsAsMap(this.solutionArgs, { "n": "numbers" }, false);
+        const quicksort = new QuickSort(solutionArgsMap, this.debug);
+        consoleOutput = quicksort.solve(this.solutionType);
         break;
       default:
         console.log(`solution ${this.solutionNameArg} not found`);
