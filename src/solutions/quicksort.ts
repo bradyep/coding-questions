@@ -4,7 +4,7 @@ import { SolutionType } from "./SolutionType";
 
 class QuickSortBlock {
   constructor(private elements: number[], debugLogFn?: (text: string) => void) {
-    if (debugLogFn) { 
+    if (debugLogFn) {
       QuickSortBlock.debugLog = debugLogFn;
       QuickSortBlock.debugLog(`QuickSortBlock initialized`);
     }
@@ -50,6 +50,20 @@ class QuickSortBlock {
       }
     }
   }
+
+  getSortedElements(): number[] {
+    if (this.pivotValue) {
+      QuickSortBlock.debugLog(`pivotValue: ${this.pivotValue} | making recursive calls`);
+      const leftElements = this.left?.getSortedElements() || [];
+      const rightElements = this.right?.getSortedElements() || [];
+
+      return [...leftElements, this.pivotValue, ...rightElements];
+    } else {
+      QuickSortBlock.debugLog(`no pivotValue. Returning elements.`);
+
+      return this.elements;
+    }
+  }
 }
 
 export class QuickSort extends Solution {
@@ -67,7 +81,7 @@ export class QuickSort extends Solution {
       this.debugLog(`numbersParam: ${numbersParam}`);
       const splitNumbers = numbersParam.split(',');
       this.debugLog(`splitNumbers: ${splitNumbers}`);
-      this.numbersToSort = splitNumbers.map(x => +x);
+      this.numbersToSort = splitNumbers.map(x => +x.replace('_', '-'));
       this.debugLog(`this.numbersToSort: ${this.numbersToSort}`);
 
       return true;
@@ -82,6 +96,6 @@ export class QuickSort extends Solution {
     const qsb = new QuickSortBlock(this.numbersToSort, (text) => this.debugLog(text));
     qsb.pivotOn(this.numbersToSort.length - 1);
 
-    return [];
+    return qsb.getSortedElements().map(x => x.toString());
   }
 }
