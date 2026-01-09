@@ -12,7 +12,7 @@ describe('quicksort initial implementation', () => {
   });
 });
 
-xdescribe('quicksort optimized implementation', () => {
+describe('quicksort optimized implementation', () => {
   it('returns a sorted list of elements', () => {
     const params: SolutionParams = new Map([['numbers', '23,99,-7,1,-192,328,0,39,95']]);
     const qs = new QuickSort(params);
