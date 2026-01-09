@@ -115,6 +115,8 @@ export class QuickSort extends Solution {
   solve(st: SolutionType): string[] {
     if (this.paramsAreValid) {
       switch (st) {
+        case SolutionType.optimized:
+          return this.optimized(this.numbersToSort);
         default:
           return this.initial(this.numbersToSort);
       }
@@ -126,6 +128,16 @@ export class QuickSort extends Solution {
   private initial(numbers: number[]): string[] {
     const qsb = new QuickSortBlock(this.numbersToSort, (text) => this.debugLog(text));
     qsb.pivotOn(this.numbersToSort.length - 1);
+
+    return qsb.getSortedElements().map(x => x.toString());
+  }
+
+  private optimized(numbers: number[]): string[] {
+    const median = this.getMedianOfThree(numbers);
+    const medianIndex = numbers.findIndex(x => x === median);
+    this.debugLog(`median of three: ${median} | medianIndex: ${medianIndex}`);
+    const qsb = new QuickSortBlock(this.numbersToSort, (text) => this.debugLog(text));
+    qsb.pivotOn(medianIndex);
 
     return qsb.getSortedElements().map(x => x.toString());
   }
