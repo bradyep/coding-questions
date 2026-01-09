@@ -5,9 +5,17 @@ import { SolutionType } from './SolutionType';
 
 describe('quicksort implementation', () => {
   it('returns a sorted list of elements', () => {
-    const params: SolutionParams = new Map([['numbers', '23,99,-7,1,-192,328,0,39,95']])
+    const params: SolutionParams = new Map([['numbers', '23,99,-7,1,-192,328,0,39,95']]);
     const qs = new QuickSort(params);
     const initialResult = qs.solve(SolutionType.initial);
     expect(initialResult).toStrictEqual(['-192', '-7', '0', '1', '23', '39', '95', '99', '328']);
   });
 });
+
+describe('median of three implementation', () => {
+  it('returns expected values', () => {
+    const params: SolutionParams = new Map([['numbers', '23,99,-7,1,-192,328,0,39,95']]);
+    const qs = new QuickSort(params);
+    expect(qs.getMedianOfThree([1, 3, 5])).toEqual(3);
+  });
+})

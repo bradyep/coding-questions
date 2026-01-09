@@ -92,7 +92,38 @@ export class QuickSort extends Solution {
     }
   }
 
+  getMedianOfThree(arr: number[]): number {
+    if (arr.length < 3) {
+      this.debugLog(`Error: Can't get the median of three with less than three numbers`);
+
+      return 0;
+    }
+
+    const samples: number[] = [];
+    // Non-null assertions due to TypeScript type inference failures
+    samples.push(arr[0]!);
+    const middleIndex = Math.round(arr.length / 2) - 1;
+    samples.push(arr[middleIndex]!);
+    samples.push(arr[arr.length - 1]!);
+
+    const qsb = new QuickSortBlock(samples, (text) => this.debugLog(text));
+    qsb.pivotOn(samples.length - 1);
+
+    return qsb.getSortedElements()[1]!;
+  }
+
   solve(st: SolutionType): string[] {
+    if (this.paramsAreValid) {
+      switch (st) {
+        default:
+          return this.initial(this.numbersToSort);
+      }
+    } else {
+      return [`Invalid parameters`];
+    }
+  }
+
+  private initial(numbers: number[]): string[] {
     const qsb = new QuickSortBlock(this.numbersToSort, (text) => this.debugLog(text));
     qsb.pivotOn(this.numbersToSort.length - 1);
 
