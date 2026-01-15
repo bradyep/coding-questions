@@ -12,6 +12,7 @@ class QuickSortBlock {
 
   public pivotValue: number | undefined;
   public left: QuickSortBlock | undefined;
+  public center: QuickSortBlock | undefined;
   public right: QuickSortBlock | undefined;
   static debugLog: (text: string) => void;
 
@@ -36,14 +37,52 @@ class QuickSortBlock {
         }
       }
 
-      if (this.left && this.left.elements.length > 1) {
+      if (this.left.elements.length > 1) {
         this.left.pivotOn(this.left.elements.length - 1);
       } else {
         QuickSortBlock.debugLog(`0 or 1 elements in left, we are done here`);
       }
 
-      if (this.right && this.right.elements.length > 1) {
+      if (this.right.elements.length > 1) {
         this.right.pivotOn(this.right.elements.length - 1);
+      } else {
+        QuickSortBlock.debugLog(`0 or 1 elements in right, we are done here`);
+      }
+    }
+  }
+
+  pivotOn3wp(elementIndex: number) {
+    this.pivotValue = this.elements[elementIndex];
+    if (this.pivotValue === undefined) {
+      QuickSortBlock.debugLog(`Error: Cannot pivot on: ${this.pivotValue}`);
+
+      return;
+    } else {
+      QuickSortBlock.debugLog(`pivot on: ${this.pivotValue}`);
+      this.left = new QuickSortBlock([]);
+      this.center = new QuickSortBlock([]);
+      this.right = new QuickSortBlock([]);
+      for (const elementValue of this.elements) {
+        if (elementValue < this.pivotValue) {
+          QuickSortBlock.debugLog(`Adding ${elementValue} to left`);
+          this.left.elements.push(elementValue);
+        } else if (elementValue === this.pivotValue) {
+          QuickSortBlock.debugLog(`Adding ${elementValue} to center`);
+          this.center.elements.push(elementValue);
+        } else {
+          QuickSortBlock.debugLog(`Adding ${elementValue} to right`);
+          this.right.elements.push(elementValue);
+        }
+      }
+
+      if (this.left.elements.length > 1) {
+        this.left.pivotOn3wp(this.left.elements.length - 1);
+      } else {
+        QuickSortBlock.debugLog(`0 or 1 elements in left, we are done here`);
+      }
+
+      if (this.right.elements.length > 1) {
+        this.right.pivotOn3wp(this.right.elements.length - 1);
       } else {
         QuickSortBlock.debugLog(`0 or 1 elements in right, we are done here`);
       }
@@ -57,6 +96,21 @@ class QuickSortBlock {
       const rightElements = this.right?.getSortedElements() || [];
 
       return [...leftElements, this.pivotValue, ...rightElements];
+    } else {
+      QuickSortBlock.debugLog(`no pivotValue. Returning elements.`);
+
+      return this.elements;
+    }
+  }
+
+  getSortedElements3wp(): number[] {
+    if (this.pivotValue !== undefined) {
+      QuickSortBlock.debugLog(`pivotValue: ${this.pivotValue} | making recursive calls`);
+      const leftElements = this.left?.getSortedElements3wp() || [];
+      const centerElements = this.center?.elements || [];
+      const rightElements = this.right?.getSortedElements3wp() || [];
+
+      return [...leftElements, ...centerElements, ...rightElements];
     } else {
       QuickSortBlock.debugLog(`no pivotValue. Returning elements.`);
 
@@ -138,8 +192,8 @@ export class QuickSort extends Solution {
     const medianIndex = numbers.findIndex(x => x === median);
     this.debugLog(`median of three: ${median} | medianIndex: ${medianIndex}`);
     const qsb = new QuickSortBlock(this.numbersToSort, (text) => this.debugLog(text));
-    qsb.pivotOn(medianIndex);
+    qsb.pivotOn3wp(medianIndex);
 
-    return qsb.getSortedElements().map(x => x.toString());
+    return qsb.getSortedElements3wp().map(x => x.toString());
   }
 }
