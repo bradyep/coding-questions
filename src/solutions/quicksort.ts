@@ -16,23 +16,22 @@ class QuickSortBlock {
   static debugLog: (text: string) => void;
 
   pivotOn(elementIndex: number) {
-    const pivotValue = this.elements[elementIndex];
-    if (pivotValue === undefined) {
-      QuickSortBlock.debugLog(`Error: Cannot pivot on: ${pivotValue}`);
+    this.pivotValue = this.elements[elementIndex];
+    if (this.pivotValue === undefined) {
+      QuickSortBlock.debugLog(`Error: Cannot pivot on: ${this.pivotValue}`);
 
       return;
     } else {
-      QuickSortBlock.debugLog(`pivot on: ${pivotValue}`);
-      this.pivotValue = pivotValue;
+      QuickSortBlock.debugLog(`pivot on: ${this.pivotValue}`);
       const elementsWithoutPivot = this.elements.toSpliced(elementIndex, 1);
+      this.left = new QuickSortBlock([]);
+      this.right = new QuickSortBlock([]);
       for (const elementValue of elementsWithoutPivot) {
-        if (elementValue <= pivotValue) {
+        if (elementValue <= this.pivotValue) {
           QuickSortBlock.debugLog(`Adding ${elementValue} to left`);
-          if (!this.left) { this.left = new QuickSortBlock([]); }
           this.left.elements.push(elementValue);
         } else {
           QuickSortBlock.debugLog(`Adding ${elementValue} to right`);
-          if (!this.right) { this.right = new QuickSortBlock([]); }
           this.right.elements.push(elementValue);
         }
       }
@@ -126,6 +125,7 @@ export class QuickSort extends Solution {
   }
 
   private initial(numbers: number[]): string[] {
+    this.debugLog(`Running initial implementation`);
     const qsb = new QuickSortBlock(this.numbersToSort, (text) => this.debugLog(text));
     qsb.pivotOn(this.numbersToSort.length - 1);
 
@@ -133,6 +133,7 @@ export class QuickSort extends Solution {
   }
 
   private optimized(numbers: number[]): string[] {
+    this.debugLog(`Running optimized implementation`);
     const median = this.getMedianOfThree(numbers);
     const medianIndex = numbers.findIndex(x => x === median);
     this.debugLog(`median of three: ${median} | medianIndex: ${medianIndex}`);
